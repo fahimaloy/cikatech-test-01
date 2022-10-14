@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'Poppins';
+  src: local('Poppins'),
+    url(~static/Poppins/Poppins-Regular.ttf) format('truetype');
+}
+/* @import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap'); */
+@font-face {
+  font-family: 'Oswald';
+  src: local('Oswald'),
+    url(~static/Oswald/Oswald-VariableFont_wght.ttf) format('truetype');
+}
+body {
+  font-family: Poppins !important;
+}
