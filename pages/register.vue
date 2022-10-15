@@ -1,114 +1,129 @@
 <template>
-  <div class="flex bg-[#1F1B2E]">
-    <img src="/image1.png" class="min-h-screen w-5/12" alt="" />
-    <div class="min-h-screen w-full my-auto p-12 flex flex-col">
-      <h1 class="text-white text-7xl my-4 register-text">Register</h1>
-      <div class="grid grid-flow-row auto-rows-max grid-cols-2 gap-2">
-        <div class="p-5 bg-[#28223C] flex rounded-lg">
-          <img src="/add-person.svg" alt="" />
-          <input
-            type="text"
-            class="text-white bg-[#28223C] mx-2 border-none w-full outline-none"
-            v-model="userDetails.username"
-            placeholder="Username 6-16 karakter standar"
-          />
-        </div>
-        <div class="p-5 bg-[#28223C] flex rounded-lg">
-          <img src="/bank.svg" alt="" />
-          <select
-            v-model="userDetails.bank_name"
-            class="text-white bg-[#28223C] mx-2 w-full border-none outline-none"
-          >
-            <option
-              v-for="bank in banks"
-              :key="bank.id"
-              class="p-2 max-w-full"
-              :value="bank.id"
-            >
-              {{ bank.name }}
-            </option>
-          </select>
-        </div>
-        <div class="p-5 bg-[#28223C] flex rounded-lg">
-          <img src="/lock.svg" alt="" />
-          <input
-            :type="pass1 ? 'text' : 'password'"
-            class="text-white bg-[#28223C] w-full mx-2 border-none outline-none"
-            v-model="userDetails.password"
-            placeholder="Password (6 karakter atau lebih)"
-          />
-          <img src="/eye.svg" @click="togglePass1" />
-        </div>
-        <div class="p-5 bg-[#28223C] flex rounded-lg">
-          <img src="/document.svg" alt="" />
-          <input
-            type="number"
-            class="text-white bg-[#28223C] mx-2 border-none outline-none"
-            v-model="userDetails.account_number"
-            placeholder="No Rekening"
-          />
-        </div>
-        <div class="p-5 bg-[#28223C] flex rounded-lg">
-          <img src="/lock.svg" />
-          <input
-            :type="pass2 ? 'text' : 'password'"
-            class="text-white bg-[#28223C] w-full mx-2 border-none outline-none"
-            v-model="confirmpass"
-            placeholder="Password sekali lagi"
-          />
-          <img src="/eye.svg" @click="togglePass2" />
-        </div>
-        <div class="p-5 bg-[#28223C] flex rounded-lg">
-          <img src="/document.svg" alt="" />
-          <input
-            type="text"
-            class="text-white bg-[#28223C] mx-2 border-none outline-none"
-            v-model="userDetails.account_name"
-            placeholder="Nama Rekening"
-          />
-        </div>
-        <div class="p-5 bg-[#28223C] flex rounded-lg">
-          <img src="/inbox.svg" alt="" />
-          <input
-            type="email"
-            class="text-white bg-[#28223C] mx-2 border-none outline-none"
-            v-model="userDetails.email"
-            placeholder="Email"
-          />
-        </div>
-        <div class="p-5 bg-[#28223C] flex rounded-lg">
-          <img src="/document.svg" alt="" />
-          <input
-            type="text"
-            class="text-white bg-[#28223C] mx-2 border-none outline-none"
-            v-model="userDetails.referral_username"
-            placeholder="Username Referal (bila ada)"
-          />
-        </div>
-        <div class="p-5 bg-[#28223C] flex rounded-lg">
-          <img src="/smartphone.svg" alt="" />
-          <input
-            type="tel"
-            class="text-white bg-[#28223C] mx-2 border-none outline-none"
-            v-model="userDetails.phone"
-            placeholder="Telepon"
-          />
-        </div>
-      </div>
-      <div class="footer my-3">
-        <button
-          @click="submitButtonClicked"
-          class="bg-[#FD1A79] w-full my-1 p-3 text-white rounded-sm"
+  <div class="flex md:flex-row flex-col h-screen w-screen bg-[#1F1B2E]">
+    <img
+      src="/image1.png"
+      class="md:min-h-screen md:w-5/12 w-screen h-32 bg-cover"
+      alt=""
+    />
+    <div class="min-h-screen w-full md:my-auto mx-auto p-12 flex flex-col">
+      <form @submit.prevent="submitButtonClicked">
+        <h1 class="text-white text-7xl my-4 register-text">Register</h1>
+        <div
+          class="grid grid-flow-row auto-rows-max grid-cols-1 md:grid-cols-2 gap-2 text-xs leading-3 md:text-sm md:leading-5"
         >
-          Register
-        </button>
-        <p class="text-center text-white">
-          Sudah punya account?
-          <nuxt-link to="/" class="list-none text-[#FD1A79]">
-            Login disini</nuxt-link
+          <div class="p-5 bg-[#28223C] flex rounded-lg">
+            <img src="/add-person.svg" alt="" />
+            <input
+              type="text"
+              class="text-white bg-[#28223C] mx-2 border-none w-full outline-none"
+              v-model="userDetails.username"
+              placeholder="Username 6-16 karakter standar"
+            />
+          </div>
+          <div class="p-5 bg-[#28223C] flex rounded-lg">
+            <img src="/bank.svg" alt="" />
+            <select
+              v-model="userDetails.bank_name"
+              class="bg-[#28223C] mx-2 w-full border-none outline-none"
+              :class="
+                userDetails.bank_name == 0 ? 'text-[#9ca3af]' : 'text-white'
+              "
+            >
+              <option value="0" class="text-[#9ca3af]" disabled>
+                Pilih Bank
+              </option>
+
+              <option
+                v-for="bank in banks"
+                :key="bank.id"
+                class="p-2 max-w-full"
+                :value="bank.id"
+              >
+                {{ bank.name }}
+              </option>
+            </select>
+          </div>
+          <div class="p-5 bg-[#28223C] flex rounded-lg">
+            <img src="/lock.svg" alt="" />
+            <input
+              :type="pass1 ? 'text' : 'password'"
+              class="text-white bg-[#28223C] w-full mx-2 border-none outline-none"
+              v-model="userDetails.password"
+              placeholder="Password (6 karakter atau lebih)"
+            />
+            <img src="/eye.svg" @click="togglePass1" />
+          </div>
+          <div class="p-5 bg-[#28223C] flex rounded-lg">
+            <img src="/document.svg" alt="" />
+            <input
+              type="number"
+              class="text-white bg-[#28223C] mx-2 border-none outline-none w-full"
+              v-model="userDetails.account_number"
+              placeholder="No Rekening"
+            />
+          </div>
+          <div class="p-5 bg-[#28223C] flex rounded-lg">
+            <img src="/lock.svg" />
+            <input
+              :type="pass2 ? 'text' : 'password'"
+              class="text-white bg-[#28223C] w-full mx-2 border-none outline-none"
+              v-model="confirmpass"
+              placeholder="Password sekali lagi"
+            />
+            <img src="/eye.svg" @click="togglePass2" />
+          </div>
+          <div class="p-5 bg-[#28223C] flex rounded-lg">
+            <img src="/document.svg" alt="" />
+            <input
+              type="text"
+              class="text-white bg-[#28223C] mx-2 border-none outline-none w-full"
+              v-model="userDetails.account_name"
+              placeholder="Nama Rekening"
+            />
+          </div>
+          <div class="p-5 bg-[#28223C] flex rounded-lg">
+            <img src="/inbox.svg" alt="" />
+            <input
+              type="email"
+              class="text-white bg-[#28223C] mx-2 border-none outline-none w-full"
+              v-model="userDetails.email"
+              placeholder="Email"
+            />
+          </div>
+          <div class="p-5 bg-[#28223C] flex rounded-lg">
+            <img src="/document.svg" alt="" />
+            <input
+              type="text"
+              class="text-white bg-[#28223C] mx-2 border-none outline-none w-full"
+              v-model="userDetails.referral_username"
+              placeholder="Username Referal (bila ada)"
+            />
+          </div>
+          <div class="p-5 bg-[#28223C] flex rounded-lg">
+            <img src="/smartphone.svg" alt="" />
+            <input
+              type="tel"
+              class="text-white bg-[#28223C] mx-2 border-none outline-none w-full"
+              v-model="userDetails.phone"
+              placeholder="Telepon"
+            />
+          </div>
+        </div>
+        <div class="footer my-3">
+          <button
+            type="submit"
+            class="bg-[#FD1A79] w-full my-1 p-3 text-white rounded-lg"
           >
-        </p>
-      </div>
+            Register
+          </button>
+          <p class="text-center text-white mt-1 mb-10">
+            Sudah punya account?
+            <nuxt-link to="/" class="list-none text-[#FD1A79]">
+              Login disini</nuxt-link
+            >
+          </p>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -125,7 +140,7 @@ const registerUrl = 'https://member-api.cktch.top/api/v1/register'
 const userDetails = reactive({
   username: '',
   password: '',
-  bank: null,
+  bank_name: '0',
   email: '',
   phone: '',
   referral_username: '',
@@ -141,33 +156,38 @@ const submitButtonClicked = () => {
         $toast.show('Successfully Registered User', {
           theme: 'toasted-primary',
           type: 'error',
-          className: 'w-full bg-green-700 rounded-lg p-3 h-10',
-          fitToScreen: true,
+          className: 'w-full bg-green-700 rounded-lg font-bold p-3 h-16',
+
           keepOnHover: true,
-          position: 'top-right',
+          position: 'top-center',
+          icon: 'close',
           duration: 5000,
         })
         router.push({ path: '/' })
       })
       .catch((err) => {
-        if (err.response.data.status == 'error') {
-          $toast.show(err.response.data.message, {
-            theme: 'toasted-primary',
-            type: 'error',
-            className: 'w-full bg-red-700 rounded-lg p-3 h-16',
-            fitToScreen: true,
-            keepOnHover: true,
-            position: 'top-right',
-            duration: 3000,
-          })
-        } else {
+        try {
+          if (err.response.data.status == 'error') {
+            $toast.show(err.response.data.message, {
+              theme: 'toasted-primary',
+              type: 'error',
+              className: 'w-full bg-red-900 rounded-lg font-bold p-3 h-16',
+
+              keepOnHover: true,
+              position: 'top-center',
+              icon: 'close',
+              duration: 3000,
+            })
+          }
+        } catch {
           $toast.show('Some Problem Occurred!', {
             theme: 'toasted-primary',
             type: 'error',
-            className: 'w-full bg-red-700 rounded-lg p-3 h-16',
-            fitToScreen: true,
+            className: 'w-full bg-red-900 rounded-lg font-bold p-3 h-16',
+
             keepOnHover: true,
-            position: 'top-right',
+            position: 'top-center',
+            icon: 'close',
             duration: 3000,
           })
         }
@@ -176,10 +196,11 @@ const submitButtonClicked = () => {
     $toast.show('Passwords Are Not Same!', {
       theme: 'toasted-primary',
       type: 'error',
-      className: 'w-full bg-blue-700 rounded-lg p-3 h-16',
-      fitToScreen: true,
+      className: 'w-full bg-blue-700 rounded-lg font-bold p-3 h-16',
+
       keepOnHover: true,
-      position: 'top-right',
+      position: 'top-center',
+      icon: 'close',
       duration: 3000,
     })
   }

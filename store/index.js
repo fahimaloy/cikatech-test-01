@@ -2,7 +2,8 @@ export const state = () => ({
   isAuth: false,
   token: '',
   user: {
-    username: '',
+    username: 'Username',
+    email: 'email@example.com',
   },
   pages: [],
 })

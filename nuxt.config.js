@@ -14,7 +14,13 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/icon?family=Material+Icons',
+      },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -51,7 +57,7 @@ export default {
     baseURL: '/',
   },
   toast: {
-    position: 'top-center',
+    position: 'top-right',
     register: [
       // Register custom toasts
       {
@@ -59,6 +65,7 @@ export default {
         message: 'Oops...Something went wrong',
         options: {
           type: 'error',
+          icon: 'error_outline',
         },
       },
     ],

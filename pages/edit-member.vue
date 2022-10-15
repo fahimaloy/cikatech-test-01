@@ -84,7 +84,7 @@
 import { onMounted, ref } from 'vue'
 import { useContext, useRouter, useRoute } from '@nuxtjs/composition-api'
 import NavBar from '../components/NavBar.vue'
-const { $axios, store } = useContext()
+const { $axios, store, $toast } = useContext()
 
 let banks = ref([])
 let user = ref({})
@@ -127,10 +127,43 @@ const update = () => {
   $axios
     .post(url, payload, { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => {
+      $toast.show('Successfully Updated User', {
+        theme: 'toasted-primary',
+        type: 'error',
+        className: 'w-full bg-green-700 rounded-lg p-3 h-16',
+
+        keepOnHover: true,
+        position: 'top-center',
+        icon: 'close',
+        duration: 5000,
+      })
       router.push({ path: '/members' })
     })
     .catch((err) => {
       console.log(err)
+      if (err.response.data.status === 'error') {
+        $toast.show(err.response.data.message, {
+          theme: 'toasted-primary',
+          type: 'error',
+          className: 'w-full bg-red-700 rounded-lg p-3 h-16',
+
+          keepOnHover: true,
+          position: 'top-center',
+          icon: 'close',
+          duration: 3000,
+        })
+      } else {
+        $toast.show('Some Problem Occurred!', {
+          theme: 'toasted-primary',
+          type: 'error',
+          className: 'w-full bg-red-700 rounded-lg p-3 h-16',
+
+          keepOnHover: true,
+          position: 'top-center',
+          icon: 'close',
+          duration: 3000,
+        })
+      }
     })
 }
 </script>
