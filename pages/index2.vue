@@ -1,7 +1,7 @@
-<script setup>
+<script>
 import { onMounted, reactive, ref } from 'vue'
 import { useContext, useRouter } from '@nuxtjs/composition-api'
-const { $axios, store, toastr } = useContext()
+const { $axios, store } = useContext()
 let captcha = ref(0)
 const router = useRouter()
 const loginUrl = 'https://member-api.cktch.top/api/v1/login'
@@ -10,8 +10,7 @@ let userDetails = reactive({
   user_account: '',
   password: '',
 })
-// eslint-disable-next-line no-undef
-toastr.success('Have fun storming the castle!', 'Miracle Max Says')
+
 const updateCaptcha = () => {
   writtenCaptcha.value = ''
   captcha.value = Math.floor(Math.random() * 90 + 10)
