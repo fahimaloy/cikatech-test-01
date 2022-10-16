@@ -1,7 +1,24 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useContext, useRouter } from '@nuxtjs/composition-api'
+import toastr from 'toastr'
 import NavBar from '../../components/NavBar.vue'
+toastr.options = {
+  closeButton: true,
+  debug: false,
+  newestOnTop: false,
+  progressBar: true,
+  positionClass: 'toast-top-left',
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: '2000',
+  hideDuration: '1000',
+  extendedTimeOut: '500',
+  showEasing: 'swing',
+  hideEasing: 'linear',
+  showMethod: 'show',
+  hideMethod: 'fadeOut',
+}
 
 const { $axios, store } = useContext()
 const router = useRouter()
@@ -20,10 +37,10 @@ const fetchMembers = (url) => {
     .catch((err) => {
       try {
         if (err.response.data.status === 'error') {
-          console.log(err.response.data)
+          toastr.error(err.response.data.message, err.response.data.status)
         }
       } catch {
-        console.log('ERROR')
+        toastr.error('Some Error Occurred!', 'Error')
       }
     })
 }
@@ -50,15 +67,16 @@ const deleteButtonClicked = (userID) => {
   $axios
     .post(deleteUrl, data, { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => {
+      toastr.success('Success', 'Successfully Deleted User!')
       fetchMembers(baseUrl)
     })
     .catch((err) => {
       try {
         if (err.response.data.status === 'error') {
-          console.log('ds')
+          toastr.error(err.response.data.message, err.response.data.status)
         }
       } catch {
-        console.log('')
+        toastr.error('Some Error Occurred!', 'Error')
       }
     })
 }
@@ -68,19 +86,21 @@ const deleteButtonClicked = (userID) => {
     <NavBar />
 
     <main
-      class="container flex flex-col justify-center items-center px-40 p-10"
+      class="container flex flex-col justify-center items-center mx-auto p-10"
     >
       <div class="flex justify-between min-w-full items-center my-5">
         <h1 class="text-[#FD1A79] font-extrabold pink-text">Member List</h1>
-        <div class="bg-[#393153] flex">
+        <div
+          class="bg-[#393153] search-box flex focus-within:border-sky-500 focus-within:ring-sky-500 focus-within:ring-1"
+        >
           <img
             src="/search.svg"
-            class="mx-1 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+            class="mx-3 my-auto search-icon focus:outline-none"
           />
           <input
             type="search"
             placeholder="Search..."
-            class="placeholder:text-slate-400 p-2 bg-[#393153] w-40 rounded-lg focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 text-white"
+            class="placeholder:text-[#888398] max-w-fit search-input bg-[#393153] focus:outline-none text-white"
           />
         </div>
       </div>
@@ -167,6 +187,25 @@ const deleteButtonClicked = (userID) => {
   </div>
 </template>
 <style scoped>
+.search-box {
+  border-radius: 200px;
+  width: 195px;
+  height: 38px;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.search-input {
+  border-radius: 200px;
+  height: 38px;
+  width: 145px;
+  font-size: 14px;
+  line-height: 21px;
+}
+.search-icon {
+  height: 22px;
+  width: 22px;
+}
 .pink-text {
   font-size: 26px;
   line-height: 39px;

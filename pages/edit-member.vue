@@ -1,9 +1,25 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useContext, useRouter, useRoute } from '@nuxtjs/composition-api'
+import toastr from 'toastr'
 import NavBar from '../components/NavBar.vue'
-const { $axios, store, $toast } = useContext()
-
+const { $axios, store } = useContext()
+toastr.options = {
+  closeButton: true,
+  debug: false,
+  newestOnTop: false,
+  progressBar: true,
+  positionClass: 'toast-top-left',
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: '2000',
+  hideDuration: '1000',
+  extendedTimeOut: '500',
+  showEasing: 'swing',
+  hideEasing: 'linear',
+  showMethod: 'show',
+  hideMethod: 'fadeOut',
+}
 let banks = ref([])
 let user = ref({})
 const router = useRouter()
@@ -45,48 +61,32 @@ const update = () => {
   $axios
     .post(url, payload, { headers: { Authorization: `Bearer ${token}` } })
     .then((res) => {
-      $toast.show('Successfully Updated User', {
-        theme: 'toasted-primary',
-        type: 'error',
-        className: 'w-full bg-green-700 rounded-lg p-3 h-16',
-
-        keepOnHover: true,
-        position: 'top-center',
-        icon: 'close',
-        duration: 5000,
-      })
+      toastr.success('Successfully Editted User!', 'Success')
       router.push({ path: '/members' })
     })
     .catch((err) => {
-      console.log(err)
-      if (err.response.data.status === 'error') {
-        $toast.show(err.response.data.message, {
-          theme: 'toasted-primary',
-          type: 'error',
-          className: 'w-full bg-red-700 rounded-lg p-3 h-16',
-
-          keepOnHover: true,
-          position: 'top-center',
-          icon: 'close',
-          duration: 3000,
-        })
-      } else {
-        console.log('fjf')
+      try {
+        if (err.response.data.status === 'error') {
+          toastr.error(err.response.data.message, err.response.data.status)
+        }
+      } catch {
+        toastr.error('Some Error Occurred!', 'Error')
       }
     })
 }
 </script>
+
 <template>
-  <div class="bg-[#1F1B2E] min-h-screen">
+  <div class="bg-[#1F1B2E] w-full min-h-screen">
     <NavBar />
-    <div class="flex justify-center items-center my-10">
-      <div class="grid grid-cols-1">
+    <div class="container flex justify-center items-center mx-auto my-10">
+      <div class="grid grid-cols-1 gap-14">
         <h1 class="heading-text text-[#FD1A79]">
           Update Member: {{ user.username }}
         </h1>
         <div class="flex flex-col">
-          <p class="text-white label">Username</p>
-          <div class="p-5 bg-[#28223C] flex rounded-lg">
+          <p class="text-white label text-left">Username</p>
+          <div class="pl-5 mt-2 bg-[#28223C] flex input-div input-text">
             <img src="/add-person.svg" alt="" />
             <input
               aria-disabled="true"
@@ -95,16 +95,18 @@ const update = () => {
               class="text-[#FDD032] input-text placeholder:text-[#FDD032] bg-[#28223C] mx-2 border-none outline-none"
               disabled
               placeholder="username1 (readonly)"
+              required
             />
           </div>
         </div>
         <div class="flex flex-col">
           <p class="text-white label">Bank</p>
-          <div class="p-5 bg-[#28223C] flex rounded-lg">
+          <div class="pl-5 mt-2 bg-[#28223C] flex input-div">
             <img src="/bank.svg" alt="" />
             <!-- v-model="userDetails.bank_name" -->
             <select
               v-model="user.name_bank"
+              required
               class="text-white input-text bg-[#28223C] mx-2 w-full border-none outline-none"
             >
               <option
@@ -120,10 +122,11 @@ const update = () => {
         </div>
         <div class="flex flex-col">
           <p class="text-white label">Email</p>
-          <div class="p-5 bg-[#28223C] flex rounded-lg">
+          <div class="pl-5 mt-2 bg-[#28223C] flex input-div">
             <img src="/inbox.svg" alt="" />
             <input
               v-model="user.email"
+              required
               type="text"
               class="text-white input-text bg-[#28223C] mx-2 border-none outline-none"
               placeholder="email.username1@email.com"
@@ -132,26 +135,27 @@ const update = () => {
         </div>
         <div class="flex flex-col">
           <p class="text-white label">Phone</p>
-          <div class="p-5 bg-[#28223C] flex rounded-lg">
+          <div class="pl-5 mt-2 bg-[#28223C] flex input-div">
             <img src="/smartphone.svg" alt="" />
             <input
               type="tel"
               v-model="user.phone"
+              required
               class="text-white input-text bg-[#28223C] mx-2 border-none outline-none"
               placeholder="Username 6-16 karakter standar"
             />
           </div>
         </div>
-        <div class="flex justify-around my-2">
+        <div class="container w-full flex justify-around my-2">
           <button
             @click="backButtonClicked"
-            class="bg-[#1A82FD] text-center btn text-white w-64 mx-2 p-2"
+            class="bg-[#1A82FD] text-center btn text-white w-64 mr-2 p-2"
           >
             Back
           </button>
           <button
             @click="update"
-            class="bg-[#FD1A79] text-center btn text-white w-64 mx-2 p-2"
+            class="bg-[#FD1A79] text-center btn text-white w-64 ml-1.5 p-2"
           >
             Update
           </button>
@@ -162,23 +166,27 @@ const update = () => {
 </template>
 
 <style scoped>
+.input-div {
+  height: 47px;
+  /* width: 490px; */
+  border-radius: 5px;
+}
 .heading-text {
   font-family: 'Poppins';
-  font-style: normal;
   font-weight: 800;
   font-size: 26px;
   line-height: 39px;
+  margin-left: -8px;
 }
 .label {
   font-family: 'Poppins';
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 21px;
+  margin-bottom: 10px;
 }
 .input-text {
   font-family: 'Poppins';
-  font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;

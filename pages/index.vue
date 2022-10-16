@@ -1,7 +1,25 @@
+<!-- eslint-disable no-undef -->
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
 import { useContext, useRouter } from '@nuxtjs/composition-api'
-const { $axios, store, toastr } = useContext()
+import toastr from 'toastr'
+toastr.options = {
+  closeButton: true,
+  debug: false,
+  newestOnTop: false,
+  progressBar: true,
+  positionClass: 'toast-top-left',
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: '2000',
+  hideDuration: '1000',
+  extendedTimeOut: '500',
+  showEasing: 'swing',
+  hideEasing: 'linear',
+  showMethod: 'show',
+  hideMethod: 'fadeOut',
+}
+const { $axios, store } = useContext()
 let captcha = ref(0)
 const router = useRouter()
 const loginUrl = 'https://member-api.cktch.top/api/v1/login'
@@ -10,8 +28,7 @@ let userDetails = reactive({
   user_account: '',
   password: '',
 })
-// eslint-disable-next-line no-undef
-toastr.success('Have fun storming the castle!', 'Miracle Max Says')
+
 const updateCaptcha = () => {
   writtenCaptcha.value = ''
   captcha.value = Math.floor(Math.random() * 90 + 10)
@@ -40,7 +57,7 @@ const loginButtonClicked = () => {
               username: res.data.username,
               email: res.data.email,
             })
-
+            toastr.info('Successfully Logged In!', 'LoggedIn')
             router.push({ path: '/members' })
           })
       })
@@ -50,13 +67,14 @@ const loginButtonClicked = () => {
         updateCaptcha()
         try {
           if (err.response.data.status === 'error') {
-            console.log(err.response.data)
+            toastr.error(err.response.data.message, err.response.data.status)
           }
         } catch {
-          console.log('Error')
+          toastr.error('Some Error Occurred!', 'Error')
         }
       })
   } else {
+    toastr.warning('Please Type the Correct Captcha Bellow', 'Wrong Captcha!')
     updateCaptcha()
   }
 }
@@ -114,6 +132,7 @@ const togglePass = () => (pass.value = !pass.value)
               class="p-5 text-white bg-[#28223C] w-full mx-2 border-none outline-none"
               v-model="writtenCaptcha"
               placeholder="Enter this code here"
+              required
             />
           </div>
         </div>

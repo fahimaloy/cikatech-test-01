@@ -1,9 +1,26 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
 import { useContext, useRouter } from '@nuxtjs/composition-api'
+import toastr from 'toastr'
+toastr.options = {
+  closeButton: true,
+  debug: false,
+  newestOnTop: false,
+  progressBar: true,
+  positionClass: 'toast-top-left',
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: '2000',
+  hideDuration: '1000',
+  extendedTimeOut: '500',
+  showEasing: 'swing',
+  hideEasing: 'linear',
+  showMethod: 'show',
+  hideMethod: 'fadeOut',
+}
 let banks = ref([])
 const router = useRouter()
-const { $axios, $toast } = useContext()
+const { $axios } = useContext()
 let confirmpass = ref([])
 const bankListUrl = 'https://member-api.cktch.top/api/v1/bank/bank_wd'
 const registerUrl = 'https://member-api.cktch.top/api/v1/register'
@@ -23,56 +40,24 @@ const submitButtonClicked = () => {
     $axios
       .$post(registerUrl, userDetails)
       .then((res) => {
-        $toast.show('Successfully Registered User', {
-          theme: 'toasted-primary',
-          type: 'error',
-          className: 'w-full bg-green-700 rounded-lg font-bold p-3 h-16',
+        toastr.success('Success', 'Successfully Registered User!')
 
-          keepOnHover: true,
-          position: 'top-center',
-          icon: 'close',
-          duration: 5000,
-        })
         router.push({ path: '/' })
       })
       .catch((err) => {
         try {
-          if (err.response.data.status == 'error') {
-            $toast.show(err.response.data.message, {
-              theme: 'toasted-primary',
-              type: 'error',
-              className: 'w-full bg-red-900 rounded-lg font-bold p-3 h-16',
-
-              keepOnHover: true,
-              position: 'top-center',
-              icon: 'close',
-              duration: 3000,
-            })
+          if (err.response.data.status === 'error') {
+            toastr.error(err.response.data.message, err.response.data.status)
           }
         } catch {
-          $toast.show('Some Problem Occurred!', {
-            theme: 'toasted-primary',
-            type: 'error',
-            className: 'w-full bg-red-900 rounded-lg font-bold p-3 h-16',
-
-            keepOnHover: true,
-            position: 'top-center',
-            icon: 'close',
-            duration: 3000,
-          })
+          toastr.error('Some Error Occurred!', 'Error')
         }
       })
   } else {
-    $toast.show('Passwords Are Not Same!', {
-      theme: 'toasted-primary',
-      type: 'error',
-      className: 'w-full bg-blue-700 rounded-lg font-bold p-3 h-16',
-
-      keepOnHover: true,
-      position: 'top-center',
-      icon: 'close',
-      duration: 3000,
-    })
+    toastr.warning(
+      'Please Type Same Password for both fields',
+      'Passwords Does not match!'
+    )
   }
 }
 
