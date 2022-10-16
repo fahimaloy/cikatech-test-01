@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="bg-[#393153] container mb-15 min-w-full min-h-50 flex p-3 px-32 justify-between items-center"
+    class="bg-[#393153] mb-15 min-w-full min-h-50 flex p-3 px-32 justify-between items-center"
   >
     <div class="text-xl font-extrabold text-white" style="font-family: Archivo">
       <nuxt-link to="/">LOGO</nuxt-link>

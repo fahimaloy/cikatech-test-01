@@ -187,6 +187,9 @@ const deleteButtonClicked = (userID) => {
   </div>
 </template>
 <style scoped>
+main {
+  max-width: 1110px;
+}
 .search-box {
   border-radius: 200px;
   width: 195px;
